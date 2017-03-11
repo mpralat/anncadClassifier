@@ -1,7 +1,9 @@
 import random
 import csv
 import numpy as np
+import os
 
+filename = "dataset1.csv"
 
 class SampleGenerator:
     def __init__(self, min_attribute_range, max_attribute_range, seed_filename):
@@ -24,7 +26,6 @@ class SampleGenerator:
                  class_id) for number in range(sample_number)]
 
     def save_to_file(self, points):
-        filename = "dataset1.csv"
         with open(filename, 'a') as csvfile:
             writer = csv.writer(csvfile)
             for observation in points:
@@ -35,6 +36,10 @@ class SampleGenerator:
         self.grid_segment_number = np.sqrt(len(list(class_seed.values())[0]))
         self.grid_width = self.attribute_range / self.grid_segment_number
         print(self.grid_segment_number, self.grid_width)
+        try:
+            os.remove(filename)
+        except OSError:
+            pass
         for class_id in class_seed:
             for index, observations in enumerate(class_seed[class_id]):
                 i = index // self.grid_segment_number
