@@ -19,8 +19,8 @@ class SampleGenerator:
         return class_seed
 
     def generate_points(self, i, j, sample_number, class_id):
-        return [(random.uniform(i * self.grid_width, (i + 1) * self.grid_width),
-                 random.uniform(j * self.grid_width, (j + 1) * self.grid_width),
+        return [(random.uniform(j * self.grid_width, (j + 1) * self.grid_width),
+                 self.max_attribute_range - random.uniform(i * self.grid_width, (i + 1) * self.grid_width),
                  class_id) for number in range(sample_number)]
 
     def save_to_file(self, points):
@@ -34,8 +34,9 @@ class SampleGenerator:
         class_seed = self.parse_seed_file()
         self.grid_segment_number = np.sqrt(len(list(class_seed.values())[0]))
         self.grid_width = self.attribute_range / self.grid_segment_number
+        print(self.grid_segment_number, self.grid_width)
         for class_id in class_seed:
             for index, observations in enumerate(class_seed[class_id]):
-                i = index / self.grid_segment_number
+                i = index // self.grid_segment_number
                 j = index % self.grid_segment_number
                 self.save_to_file(self.generate_points(i, j, observations, class_id))
