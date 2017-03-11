@@ -29,5 +29,6 @@ class AnncadClassifier:
 
     def set_hypercubes_classes(self):
         for hypercube in self.grid:
-            print(hypercube.coords)
+            # print(hypercube.coords)
             hypercube.set_hypercube_class()
+            print(hypercube.coords, hypercube.hypercube_class)

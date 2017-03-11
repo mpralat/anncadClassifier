@@ -8,7 +8,15 @@ class Hypercube:
 
     def add_example(self, example):
         self.examples.append(example)
+        self.list_of_classes = list(set([x.class_id for x in self.examples]))
 
     def set_hypercube_class(self):
-        class_B = list(filter(lambda x: x.class_id == 'B', self.examples))
-        print(len(class_B))
+        max_class = -1
+        if not self.examples:
+            self.hypercube_class = 'E'
+        else:
+            for class_id in self.list_of_classes:
+                class_size = len(list(filter(lambda x: x.class_id == class_id, self.examples)))
+                if class_size > max_class:
+                    max_class = class_size
+                    self.hypercube_class = class_id
