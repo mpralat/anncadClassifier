@@ -7,8 +7,11 @@ class AnncadClassifier:
     def __init__(self,grid):
         # self.bins_number = bins_number
         # TODO pow 2
-        self.grid = grid
-        # self.create_grid()
+        self.grids = {}
+        self.basic_grid = grid
+        self.grids[self.basic_grid.level] = self.basic_grid
+
+    # self.create_grid()
     #
     # def create_grid(self):
     #     for i in range(self.bins_in_dim):
@@ -27,3 +30,6 @@ class AnncadClassifier:
     #     for hypercube in self.grid:
     #         hypercube.set_hypercube_class()
     #         print(hypercube.coords, hypercube.hypercube_class)
+
+
+

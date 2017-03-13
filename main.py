@@ -1,7 +1,7 @@
 from generator import SampleGenerator
 import csv
 from streamEngine import Stream
-from grid import Grid
+from grid import Grid, BasicGrid
 from anncad import AnncadClassifier
 from matplotlib import pyplot as plt
 import numpy as np
@@ -34,12 +34,12 @@ if __name__ == "__main__":
     stream = Stream("dataset1.csv")
     generator = stream.emit_observation
     # Classifying
-    main_grid = Grid(16, [0.0, 0.0], [100.0, 100.0])
+    main_grid = BasicGrid([0.0, 0.0], [100.0, 100.0], 16)
     anncad = AnncadClassifier(main_grid)
     while True:
         try:
             observation = next(generator)
-            anncad.grid.add_example_to_grid(observation)
+            anncad.grids[main_grid.level].add_example_to_grid(observation)
         except StopIteration:
             break
     print("xD")
