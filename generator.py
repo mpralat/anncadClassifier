@@ -5,6 +5,7 @@ import os
 
 filename = "dataset1.csv"
 
+
 class SampleGenerator:
     def __init__(self, min_attribute_range, max_attribute_range, seed_filename):
         self.attribute_range = abs(max_attribute_range - min_attribute_range)

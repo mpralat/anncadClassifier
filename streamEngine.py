@@ -1,5 +1,6 @@
 import csv
 
+
 class Stream:
     def __init__(self, dataset_filename):
         self.dataset_filename = dataset_filename
