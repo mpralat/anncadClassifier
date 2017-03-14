@@ -23,8 +23,7 @@ if __name__ == "__main__":
     while True:
         try:
             observation = next(generator)
-            anncad.grids[main_grid.level].add_example_to_grid(observation)
-            # Should we really type ".grids[main_grid.level]" explicitly in code? I think it's anncad's job.
+            anncad.add_example(observation)
         except StopIteration:
             break
     print("xD")
