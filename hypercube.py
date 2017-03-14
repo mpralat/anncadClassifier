@@ -3,12 +3,13 @@ class Hypercube:
         self.coords = coords
         self.examples = []
         self.hypercube_class = 'E'
+        self.list_of_classes = []
 
     def add_example(self, example):
         self.examples.append(example)
-        self.list_of_classes = list(set([x.class_id for x in self.examples]))
 
     def set_hypercube_class(self):
+        self.list_of_classes = list(set([x.class_id for x in self.examples]))
         old_class = self.hypercube_class
         max_class = -1
         if not self.examples:

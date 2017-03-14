@@ -4,14 +4,13 @@ import numpy as np
 
 
 class Grid:
-    def __init__(self,level):
+    def __init__(self, level):
         self.level = level
         self.hypercubes = []
 
 
 class BasicGrid(Grid):
     def __init__(self, min_attribute_range_list, max_attribute_range_list, bins_number):
-
         self.bins_number = bins_number
         self.bins_in_dim = int(np.sqrt(self.bins_number))
         self.min_attribute_range_list = min_attribute_range_list

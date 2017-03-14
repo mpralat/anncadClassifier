@@ -4,7 +4,7 @@ from example import Example
 
 
 class AnncadClassifier:
-    def __init__(self,grid):
+    def __init__(self, grid):
         # self.bins_number = bins_number
         # TODO pow 2
         self.grids = {}
