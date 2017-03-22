@@ -19,8 +19,9 @@ if __name__ == "__main__":
     generator = stream.emit_observation
     # Creating an empty grid
     main_grid = BasicGrid([0.0, 0.0], [100.0, 100.0], bins_number=16)
+    threshold = 0.67
     # Creating an instance of ANNCAD classifier
-    anncad = AnncadClassifier(main_grid)
+    anncad = AnncadClassifier(main_grid, threshold)
     while True:
         try:
             observation = next(generator)
@@ -28,4 +29,4 @@ if __name__ == "__main__":
         except StopIteration:
             break
     print("xD")
-    # anncad.set_hypercubes_classes()
+    main_grid.set_hypercubes_classes()

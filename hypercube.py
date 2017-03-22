@@ -23,3 +23,6 @@ class Hypercube:
         if not old_class == self.hypercube_class:
             print("Changed hypercube's class!\tCoords: " + str(
                 self.coords) + "\tOld class: " + old_class + "\tNew class: " + self.hypercube_class)
+
+    def get_hypercube_examples(self):
+        pass

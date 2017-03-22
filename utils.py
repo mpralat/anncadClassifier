@@ -14,8 +14,8 @@ def plot_dataset():
             if row:
                 x1.append(float(row[0])) if row[-1] == 'B' else x2.append(float(row[0]))
                 y1.append(float(row[1])) if row[-1] == 'B' else y2.append(float(row[1]))
-    plt.scatter(x1, y1, color="red", marker="v")
-    plt.scatter(x2, y2, color="blue", marker="o")
+    plt.scatter(x1, y1, color="blue", marker="v")
+    plt.scatter(x2, y2, color="red", marker="o")
     axes = plt.gca()
     axes.set_xlim([0, 100])
     axes.set_ylim([0, 100])

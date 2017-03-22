@@ -4,10 +4,11 @@ from example import Example
 
 
 class AnncadClassifier:
-    def __init__(self, grid):
+    def __init__(self, grid, threshold):
         # self.bins_number = bins_number
         # TODO pow 2
         self.basic_grid = grid
+        self.threshold = threshold
 
 
 
