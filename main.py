@@ -17,8 +17,9 @@ if __name__ == "__main__":
     # Streaming the generated observations
     stream = Stream("dataset1.csv")
     generator = stream.emit_observation
-    # Classifying
-    main_grid = BasicGrid([0.0, 0.0], [100.0, 100.0], 16)
+    # Creating an empty grid
+    main_grid = BasicGrid([0.0, 0.0], [100.0, 100.0], bins_number=16)
+    # Creating an instance of ANNCAD classifier
     anncad = AnncadClassifier(main_grid)
     while True:
         try:
