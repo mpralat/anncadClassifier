@@ -1,9 +1,6 @@
 from anncad import AnncadClassifier
-import csv
 from generator import SampleGenerator
 from grid import Grid, BasicGrid
-from matplotlib import pyplot as plt
-import numpy as np
 from streamEngine import Stream
 from utils import plot_dataset
 
@@ -18,10 +15,9 @@ if __name__ == "__main__":
     stream = Stream("dataset1.csv")
     generator = stream.emit_observation
     # Creating an empty grid
-    main_grid = BasicGrid([0.0, 0.0], [100.0, 100.0], bins_number=16)
-    threshold = 0.67
+    threshold = 0.8
     # Creating an instance of ANNCAD classifier
-    anncad = AnncadClassifier(main_grid, threshold)
+    anncad = AnncadClassifier(threshold)
     while True:
         try:
             observation = next(generator)
@@ -29,4 +25,4 @@ if __name__ == "__main__":
         except StopIteration:
             break
     print("xD")
-    main_grid.set_hypercubes_classes()
+    anncad.build_grids()
