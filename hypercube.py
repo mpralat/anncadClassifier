@@ -1,10 +1,10 @@
-import operator
 class Hypercube:
     def __init__(self, coords):
         self.coords = coords
         self.examples = []
         self.hypercube_class = 'E'
         self.class_dict = {}
+        self.middle = [0, 0]
 
     def add_example(self, example):
         self.examples.append(example)
@@ -33,17 +33,15 @@ class Hypercube:
         parent_class_dicts = [parent.class_dict for parent in parent_hypercubes]
         # Now the hypercube will get the counters of all classes
         print("parents")
-        for dict in parent_class_dicts:
-            for parent_class in dict.keys():
+        for dicti in parent_class_dicts:
+            for parent_class in dicti.keys():
                 # add the parent class counter if the key already exists, default zero
-                self.class_dict[parent_class] = self.class_dict.get(parent_class, 0) + dict[parent_class]
-
-
+                self.class_dict[parent_class] = self.class_dict.get(parent_class, 0) + dicti[parent_class]
         #  Here we've got a dict class:class_counter. to get the class name we have to get the biggest value
         sorted_classes = sorted(self.class_dict.items(), key=lambda x: x[1], reverse=True)
         print(sorted_classes)
 
-        print( sorted_classes[0][1] - sorted_classes[1][1])
+        print(sorted_classes[0][1] - sorted_classes[1][1])
         if sorted_classes[0][1] - sorted_classes[1][1] > threshold * (sorted_classes[0][1] + sorted_classes[1][1]):
             self.hypercube_class = sorted_classes[0][0]
         else:

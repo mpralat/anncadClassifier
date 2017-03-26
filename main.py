@@ -1,6 +1,6 @@
 from anncad import AnncadClassifier
+from example import Example
 from generator import SampleGenerator
-from grid import Grid, BasicGrid
 from streamEngine import Stream
 from utils import plot_dataset
 
@@ -26,3 +26,6 @@ if __name__ == "__main__":
             break
     print("xD")
     anncad.build_grids()
+    example = Example([60, 51, 'B'])
+    print("go")
+    anncad.classify(example=example)
