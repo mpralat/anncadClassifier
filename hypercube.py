@@ -1,10 +1,13 @@
+
 class Hypercube:
     def __init__(self, coords):
         self.coords = coords
         self.examples = []
         self.hypercube_class = 'E'
         self.class_dict = {}
-        self.middle = [0, 0]
+        # TODO MIDDLE
+        self.middle = [0.0] * len(coords)
+        self.parent_hypercubes_indices = []
 
     def add_example(self, example):
         self.examples.append(example)
@@ -31,6 +34,9 @@ class Hypercube:
 
     def set_lower_level_hypercube_class(self, parent_hypercubes, threshold):
         parent_class_dicts = [parent.class_dict for parent in parent_hypercubes]
+        print(parent_class_dicts)
+        print(len(parent_hypercubes))
+        print(self.class_dict)
         # Now the hypercube will get the counters of all classes
         print("parents")
         for dicti in parent_class_dicts:
@@ -41,10 +47,17 @@ class Hypercube:
         sorted_classes = sorted(self.class_dict.items(), key=lambda x: x[1], reverse=True)
         print(sorted_classes)
 
-        print(sorted_classes[0][1] - sorted_classes[1][1])
-        if sorted_classes[0][1] - sorted_classes[1][1] > threshold * (sorted_classes[0][1] + sorted_classes[1][1]):
+        # TODO PLS !! POPRAWIĆ
+        if len(sorted_classes) == 0:
+            self.hypercube_class = 'E'
+        elif len(sorted_classes) == 1:
             self.hypercube_class = sorted_classes[0][0]
         else:
-            self.hypercube_class = 'M'
+            print(sorted_classes[0][1] - sorted_classes[1][1])
+            if sorted_classes[0][1] - sorted_classes[1][1] > threshold * (sorted_classes[0][1] + sorted_classes[1][1]):
+                self.hypercube_class = sorted_classes[0][0]
+            else:
+                self.hypercube_class = 'M'
+
         print("HYPERCUBE! my coords: " + str(self.coords) + " my counters; " + str(self.class_dict) + " and my class: "
               + str(self.hypercube_class))

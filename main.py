@@ -26,6 +26,6 @@ if __name__ == "__main__":
             break
     print("xD")
     anncad.build_grids()
-    example = Example([60, 51, 'B'])
+    example = Example([1, 1, 'B'])
     print("go")
     anncad.classify(example=example)
