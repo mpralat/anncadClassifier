@@ -25,7 +25,7 @@ class Grid:
         if bins_number_log.is_integer():
             self.bins_number = bins_number
         else:
-            self.bins_number = 2**(math.ceil(bins_number / bins_number_log))
+            self.bins_number = 2**(math.ceil(bins_number_log))
         self.dims = dims
         self.bins_in_dim = int(np.power(self.bins_number, 1/self.dims))
 
@@ -53,11 +53,9 @@ class Grid:
 
 
     def nearest_neighbours_class(self, example, coords, parents_indices):
-        print(parents_indices)
-
+        print("nearest neighbours class")
         parents_data = [(self.hypercubes[parent].middle, self.hypercubes[parent].hypercube_class) for parent in parents_indices]
         distances = sorted([(distance.euclidean(example.coords, parent[0]), parent[1]) for parent in parents_data if not parent[1]=='E'])
-        print("############")
         print(distances)
         return distances[0][1]
 
@@ -80,12 +78,10 @@ class BasicGrid(Grid):
 
     def add_example_to_grid(self, observation):
         example = Example(observation)
-
         # TODO self-dimensions
         indices = tuple([int(example.coords[x] / self.hypercube_measurements[x]) for x in range(self.dims-1, -1, -1)])
         self.hypercubes[indices].add_example(example)
         self.hypercubes[indices].set_hypercube_class()
-        print(self.hypercubes[indices].hypercube_class)
 
 
     def set_hypercubes_classes(self):
@@ -94,8 +90,6 @@ class BasicGrid(Grid):
         print(" I have " + str(len(list_of_all_hc)) + " hypercubes :3")
         for hypercube in list_of_all_hc:
             hypercube.set_hypercube_class()
-            print(hypercube.coords, hypercube.hypercube_class)
-        print("------------------")
         self.child_grid.set_hypercubes_classes()
 
     def compute_middles_of_hypercubes(self):
@@ -103,7 +97,6 @@ class BasicGrid(Grid):
             for i in range(self.dims - 1, -1, -1):
                 index = self.dims - (i + 1)
                 hc.middle[i] = (hc.coords[index] + 0.5) * self.hypercube_measurements[index]
-            print(hc.coords, hc.middle, hc.hypercube_class)
 
     def classify(self, example):
         coords = tuple([int(example.coords[i] / self.hypercube_measurements[i]) for i in range(self.dims-1, -1, -1)])
@@ -113,11 +106,11 @@ class BasicGrid(Grid):
         else:
             print("empty cube")
             print(self.hypercubes[coords].middle)
-            clas = self.child_grid.classify(example, coords)
-            print(clas)
-            if clas[0] == -1:
-                clas = self.nearest_neighbours_class(example, coords, clas[1])
-            return clas
+            returned_class = self.child_grid.classify(example, coords)
+            print(returned_class)
+            if returned_class[0] == -1:
+                returned_class = self.nearest_neighbours_class(example, coords, returned_class[1])
+            return returned_class
 
 
 class LowerLevelGrid(Grid):
@@ -131,55 +124,29 @@ class LowerLevelGrid(Grid):
     def set_hypercubes_parents_indices(self):
         for hypercube in itertools.chain.from_iterable(self.hypercubes):
             coordinates = []
-            print("--------------------------------")
             for coord in hypercube.coords:
                 coordinates.append([2 * coord, 2 * coord + 1])
-            print("!!!!!!!!!!!!!!!!!!!!")
-            parents_list = []
             for indices in list(itertools.product(*coordinates)):
-                # creating a list of parent hypercubes
-                # parents_list.append(self.parent_hypercubes[tuple(reversed(indices))])
-                #print(row, column)
-                # current_class = self.parent_hypercubes[row][column].hypercube_class
-                # classes[current_class] = classes.get(current_class, 0) + 1  # <3
-            #     TU TRZEBA WSZYSTKIE EXAMPLE
                 hypercube.parent_hypercubes_indices.append(tuple(indices))
-            # hypercube.set_lower_level_hypercube_class(parents_list, self.threshold)
-            print(hypercube.parent_hypercubes_indices)
 
 
     def set_hypercubes_classes(self):
         print("GRID LEVEL: " + str(self.level))
         for hypercube in itertools.chain.from_iterable(self.hypercubes):
             coordinates = []
-            print("--------------------------------")
             for coord in hypercube.coords:
                 coordinates.append([2 * coord, 2 * coord + 1])
-            print("!!!!!!!!!!!!!!!!!!!!")
             parents_list = []
             for indices in list(itertools.product(*coordinates)):
-                # creating a list of parent hypercubes
                 parents_list.append(self.parent_hypercubes[tuple(reversed(indices))])
-                #print(row, column)
-                # current_class = self.parent_hypercubes[row][column].hypercube_class
-                # classes[current_class] = classes.get(current_class, 0) + 1  # <3
-            #     TU TRZEBA WSZYSTKIE EXAMPLE
-            #     hypercube.parent_hypercubes_indices.append(tuple(indices))
             hypercube.set_lower_level_hypercube_class(parents_list, self.threshold)
-            print(hypercube.parent_hypercubes_indices)
         print("--------------")
         if self.child_grid:
             self.child_grid.set_hypercubes_classes()
 
     def compute_middles_of_hypercubes(self):
         for hypercube in itertools.chain.from_iterable(self.hypercubes):
-            sumx = 0
-            sumy = 0
-            rows = [2 * hypercube.coords[0], 2 * hypercube.coords[0] + 1]
-            columns = [2 * hypercube.coords[1], 2 * hypercube.coords[1] + 1]
             sums = np.zeros((len(hypercube.coords)))
-            print("xdddddd")
-            print(hypercube.parent_hypercubes_indices)
             for coords in hypercube.parent_hypercubes_indices:
                 for index, summ in enumerate(sums):
                     sums[index] += self.parent_hypercubes[coords].middle[index]
@@ -190,7 +157,6 @@ class LowerLevelGrid(Grid):
         print(coords)
         if self.hypercubes[coords].hypercube_class == 'E':
             clas = self.child_grid.classify(example, coords)
-            print("CLASSS")
             if clas[0] == -1:
                 clas = self.nearest_neighbours_class(example, coords, clas[1])
             return clas
