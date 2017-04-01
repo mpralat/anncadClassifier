@@ -52,7 +52,7 @@ class Grid:
             return LowerLevelGrid(self.level - 1, self.bins_number, self.hypercubes, self.dims)
 
 
-    def nearest_neighbours_class(self, example, coords, parents_indices):
+    def nearest_neighbours_class(self, example, parents_indices):
         print("nearest neighbours class")
         parents_data = [(self.hypercubes[parent].middle, self.hypercubes[parent].hypercube_class) for parent in parents_indices]
         distances = sorted([(distance.euclidean(example.coords, parent[0]), parent[1]) for parent in parents_data if not parent[1]=='E'])
@@ -109,7 +109,7 @@ class BasicGrid(Grid):
             returned_class = self.child_grid.classify(example, coords)
             print(returned_class)
             if returned_class[0] == -1:
-                returned_class = self.nearest_neighbours_class(example, coords, returned_class[1])
+                returned_class = self.nearest_neighbours_class(example, returned_class[1])
             return returned_class
 
 
@@ -158,7 +158,7 @@ class LowerLevelGrid(Grid):
         if self.hypercubes[coords].hypercube_class == 'E':
             clas = self.child_grid.classify(example, coords)
             if clas[0] == -1:
-                clas = self.nearest_neighbours_class(example, coords, clas[1])
+                clas = self.nearest_neighbours_class(example, clas[1])
             return clas
         elif self.hypercubes[coords].hypercube_class == 'M':
             return -1, self.hypercubes[coords].parent_hypercubes_indices # flag indicating that we need to compute distance
