@@ -39,8 +39,8 @@ class SampleGenerator:
         print(self.grid_segment_number, self.grid_width)
         try:
             os.remove(filename)
-        except OSError:
-            pass
+        except OSError as e:
+            print(e.errno)
         for class_id in class_seed:
             for index, observations in enumerate(class_seed[class_id]):
                 i = index // self.grid_segment_number

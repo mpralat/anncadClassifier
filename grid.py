@@ -28,7 +28,7 @@ class Grid:
             self.bins_number = 2**(math.ceil(bins_number_log))
         self.dims = dims
         self.bins_in_dim = int(np.power(self.bins_number, 1/self.dims))
-
+        print(self.bins_in_dim, self.dims)
         if level is None:
             self.level = int(np.log2(self.bins_in_dim) + 1)
         else:
@@ -36,7 +36,7 @@ class Grid:
         print("New Grid! " + str(self.level))
 
         shape = tuple([self.bins_in_dim] * self.dims)
-        self.hypercubes = np.ones((shape)).astype(Hypercube)
+        self.hypercubes = np.ones(shape).astype(Hypercube)
 
         self.create_grid()
         self.child_grid = self.create_lower_level_grid()
@@ -51,13 +51,16 @@ class Grid:
         else:
             return LowerLevelGrid(self.level - 1, self.bins_number, self.hypercubes, self.dims)
 
-
     def nearest_neighbours_class(self, example, parents_indices):
         print("nearest neighbours class")
         parents_data = [(self.hypercubes[parent].middle, self.hypercubes[parent].hypercube_class) for parent in parents_indices]
         distances = sorted([(distance.euclidean(example.coords, parent[0]), parent[1]) for parent in parents_data if not parent[1]=='E'])
         print(distances)
         return distances[0][1]
+
+    @abc.abstractmethod
+    def update(self, example, coords):
+        return
 
     @abc.abstractmethod
     def set_hypercubes_classes(self):
@@ -83,17 +86,17 @@ class BasicGrid(Grid):
         self.hypercubes[indices].add_example(example)
         self.hypercubes[indices].set_hypercube_class()
 
-
     def set_hypercubes_classes(self):
         print("BASEGRID hypercubes")
-        list_of_all_hc = list(itertools.chain.from_iterable(self.hypercubes))
+        list_of_all_hc = list(self.hypercubes.flatten())
         print(" I have " + str(len(list_of_all_hc)) + " hypercubes :3")
         for hypercube in list_of_all_hc:
             hypercube.set_hypercube_class()
-        self.child_grid.set_hypercubes_classes()
+        if self.child_grid:
+            self.child_grid.set_hypercubes_classes()
 
     def compute_middles_of_hypercubes(self):
-        for hc in itertools.chain.from_iterable(self.hypercubes):
+        for hc in self.hypercubes.flatten():
             for i in range(self.dims - 1, -1, -1):
                 index = self.dims - (i + 1)
                 hc.middle[i] = (hc.coords[index] + 0.5) * self.hypercube_measurements[index]
@@ -112,6 +115,28 @@ class BasicGrid(Grid):
                 returned_class = self.nearest_neighbours_class(example, returned_class[1])
             return returned_class
 
+    def update(self, example, coords=None):
+        coords = tuple([int(example.coords[i] / self.hypercube_measurements[i]) for i in range(self.dims - 1, -1, -1)])
+        new_class = self.hypercubes[coords].update_basic([example])
+        print("Changed class of " + str(coords) + " to: " + str(new_class))
+        if self.child_grid:
+         self.child_grid.update(example, coords)
+
+    def batch_update(self, examples):
+        dicti = {}
+        for example in examples:
+            coords = tuple(
+                [int(example.coords[i] / self.hypercube_measurements[i]) for i in range(self.dims - 1, -1, -1)])
+            dicti[(example.class_id, coords)] = dicti.get((example.class_id, coords), [])
+            dicti[(example.class_id, coords)].append(example)
+        for (class_id, coords), example_list in dicti.items():
+            print(class_id, coords, example_list)
+            print("---------------")
+            self.hypercubes[coords].update_basic(example_list)
+            print("Koniec")
+        if self.child_grid:
+            self.child_grid.batch_update(dicti)
+
 
 class LowerLevelGrid(Grid):
     def __init__(self, level, parent_bins_number, parent_hypercubes, dims):
@@ -122,17 +147,16 @@ class LowerLevelGrid(Grid):
         self.compute_middles_of_hypercubes()
 
     def set_hypercubes_parents_indices(self):
-        for hypercube in itertools.chain.from_iterable(self.hypercubes):
+        for hypercube in self.hypercubes.flatten():
             coordinates = []
             for coord in hypercube.coords:
                 coordinates.append([2 * coord, 2 * coord + 1])
             for indices in list(itertools.product(*coordinates)):
                 hypercube.parent_hypercubes_indices.append(tuple(indices))
 
-
     def set_hypercubes_classes(self):
         print("GRID LEVEL: " + str(self.level))
-        for hypercube in itertools.chain.from_iterable(self.hypercubes):
+        for hypercube in self.hypercubes.flatten():
             coordinates = []
             for coord in hypercube.coords:
                 coordinates.append([2 * coord, 2 * coord + 1])
@@ -145,7 +169,7 @@ class LowerLevelGrid(Grid):
             self.child_grid.set_hypercubes_classes()
 
     def compute_middles_of_hypercubes(self):
-        for hypercube in itertools.chain.from_iterable(self.hypercubes):
+        for hypercube in self.hypercubes.flatten():
             sums = np.zeros((len(hypercube.coords)))
             for coords in hypercube.parent_hypercubes_indices:
                 for index, summ in enumerate(sums):
@@ -156,12 +180,25 @@ class LowerLevelGrid(Grid):
         coords = tuple([int(x/2) for x in coords])
         print(coords)
         if self.hypercubes[coords].hypercube_class == 'E':
-            clas = self.child_grid.classify(example, coords)
-            if clas[0] == -1:
-                clas = self.nearest_neighbours_class(example, clas[1])
-            return clas
+            returned_class = self.child_grid.classify(example, coords)
+            if returned_class[0] == -1:
+                returned_class = self.nearest_neighbours_class(example, returned_class[1])
+            return returned_class
         elif self.hypercubes[coords].hypercube_class == 'M':
             return -1, self.hypercubes[coords].parent_hypercubes_indices # flag indicating that we need to compute distance
         else:
-            print("heh")
             return self.hypercubes[coords].hypercube_class
+
+    def update(self, example, coords):
+        coords = tuple([int(x / 2) for x in coords])
+        new_class = self.hypercubes[coords].update_lower_level(example.class_id, 1, self.threshold)
+        print("Changed class of " + str(coords) + " to: " + str(new_class))
+        if self.child_grid:
+            self.child_grid.update(example, coords)
+
+    def batch_update(self, dicti):
+        for (class_id, coords), examples in dicti.items():
+            coords = tuple([int(x / 2) for x in coords])
+            self.hypercubes[coords].update_lower_level(class_id, len(examples), self.threshold)
+        if self.child_grid:
+            self.child_grid.batch_update(dicti)

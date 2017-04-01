@@ -2,9 +2,12 @@ from grid import BasicGrid
 
 
 class AnncadClassifier:
-    def __init__(self, threshold):
+    def __init__(self, threshold, batch_size):
         self.threshold = threshold
-        self.basic_grid = BasicGrid([0.0, 0.0], [100.0, 100.0], bins_number=14, threshold=self.threshold)
+        self.batch_size = batch_size
+        self.example_queue = []
+        # TODO bins_number rename
+        self.basic_grid = BasicGrid([0.0, 0.0, 0.0], [10.0, 10.0, 10.0], bins_number=8, threshold=self.threshold)
 
     def add_example(self, example):
         # Add to basic grid first
@@ -17,3 +20,11 @@ class AnncadClassifier:
         returned_class = self.basic_grid.classify(example=example)
         example.predicted_class_id = returned_class
         print(returned_class)
+
+    def update(self, example):
+        self.example_queue.append(example)
+        self.batch_update()
+
+    def batch_update(self):
+        if len(self.example_queue) > self.batch_size:
+            self.basic_grid.batch_update(self.example_queue)
