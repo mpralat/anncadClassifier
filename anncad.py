@@ -7,9 +7,10 @@ class AnncadClassifier:
         self.batch_size = batch_size
         self.example_queue = []
         # TODO bins_number rename
-        self.basic_grid = BasicGrid([0.0, 0.0, 0.0], [10.0, 10.0, 10.0], bins_number=8, threshold=self.threshold)
+        self.basic_grid = BasicGrid([0.0, 0.0], [100.0, 100.0], bins_number=8, threshold=self.threshold)
 
     def add_example(self, example):
+        # TODO maybe we should consider wrapping the observation into an example inside anncad?
         # Add to basic grid first
         self.basic_grid.add_example_to_grid(example)
 

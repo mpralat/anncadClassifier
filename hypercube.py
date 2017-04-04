@@ -1,6 +1,9 @@
+import utils
 
-class Hypercube:
+class Hypercube(object):
     def __init__(self, coords):
+        if (not utils.is_array_numeric(coords)) or len(coords) < 1:
+            raise ValueError("Coordinates should be a numerical array with at least one element.")
         self.coords = coords
         self.examples = []
         self.hypercube_class = 'E'
@@ -9,6 +12,7 @@ class Hypercube:
         self.middle = [0.0] * len(coords)
         self.parent_hypercubes_indices = []
 
+#TODO test case?
     def add_example(self, example):
         self.examples.append(example)
 
@@ -16,6 +20,7 @@ class Hypercube:
         # Setting up the dictionary - class : 0 for starters
         self.class_dict = dict.fromkeys(list(set([x.class_id for x in self.examples])), 0)
         old_class = self.hypercube_class
+        print(old_class)
         if not self.examples:
             self.hypercube_class = 'E'
         else:
@@ -30,7 +35,6 @@ class Hypercube:
         if not old_class == self.hypercube_class:
             print("Changed hypercube's class!\tCoords: " + str(
                 self.coords) + "\tOld class: " + old_class + "\tNew class: " + self.hypercube_class)
-        # print("Hello hypercube! Coords: " + str(self.coords) + "\t Class dict: " + str(self.class_dict))
 
     def set_lower_level_hypercube_class(self, parent_hypercubes, threshold):
         parent_class_dicts = [parent.class_dict for parent in parent_hypercubes]
@@ -41,13 +45,11 @@ class Hypercube:
                 self.class_dict[parent_class] = self.class_dict.get(parent_class, 0) + dicti[parent_class]
         #  Here we've got a dict class:class_counter. to get the class name we have to get the biggest value
         sorted_classes = sorted(self.class_dict.items(), key=lambda x: x[1], reverse=True)
-        # TODO PLS !! POPRAWIĆ
         if len(sorted_classes) == 0:
             self.hypercube_class = 'E'
         elif len(sorted_classes) == 1:
             self.hypercube_class = sorted_classes[0][0]
         else:
-            # print(sorted_classes[0][1] - sorted_classes[1][1])
             if sorted_classes[0][1] - sorted_classes[1][1] > threshold * (sorted_classes[0][1] + sorted_classes[1][1]):
                 self.hypercube_class = sorted_classes[0][0]
             else:

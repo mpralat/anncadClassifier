@@ -6,8 +6,8 @@ from utils import plot_dataset
 
 if __name__ == "__main__":
     # Generating the samples
-    # sample_generator = SampleGenerator(0.0, 100.0, "dataset_seed.csv")
-    # sample_generator.create_dataset()
+    sample_generator = SampleGenerator(0.0, 100.0, "dataset_seed.csv")
+    sample_generator.create_dataset()
     # # Plotting
     # plot_dataset()
     # Streaming the generated observations
@@ -25,10 +25,10 @@ if __name__ == "__main__":
             break
     print("Build grids")
     anncad.build_grids()
-    example = Example([1, 1, 1, 'R'])
+    example = Example([1, 1, 'R'])
     print("Classify")
     anncad.classify(example=example)
     print("Update")
-    examples = [example, Example([5, 3, 3, 'R']), Example([3, 3, 3, 'B'])]
+    examples = [example, Example([5, 3, 'R']), Example([ 'B'])]
     for example in examples:
         anncad.update(example)

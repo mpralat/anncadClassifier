@@ -1,7 +1,8 @@
 import csv
 from matplotlib import pyplot as plt
 import numpy as np
-
+# Boolean, unsigned int, signed int, float and complex
+_NUMERIC_KINDS=set('buifc')
 
 def plot_dataset():
     x1 = []
@@ -23,3 +24,6 @@ def plot_dataset():
     axes.set_yticks(np.arange(0, 100, 25))
     plt.grid()
     plt.savefig("plot.png")
+
+def is_array_numeric(array):
+    return np.asarray(array).dtype.kind in _NUMERIC_KINDS
