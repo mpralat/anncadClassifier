@@ -22,9 +22,9 @@ class SampleGenerator:
         return class_seed
 
     def generate_points(self, i, j, sample_number, class_id):
-        return [(random.uniform(j * self.grid_width, (j + 1) * self.grid_width),
-                 self.max_attribute_range - random.uniform(i * self.grid_width, (i + 1) * self.grid_width),
-                 class_id) for number in range(sample_number)]
+        return [(float(random.uniform(j * self.grid_width, (j + 1) * self.grid_width)),
+                 float(self.max_attribute_range - random.uniform(i * self.grid_width, (i + 1) * self.grid_width)),
+                 class_id) for _ in range(sample_number)]
 
     def save_to_file(self, points):
         with open(filename, 'a') as csvfile:

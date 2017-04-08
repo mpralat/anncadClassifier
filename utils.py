@@ -2,7 +2,10 @@ import csv
 from matplotlib import pyplot as plt
 import numpy as np
 # Boolean, unsigned int, signed int, float and complex
-_NUMERIC_KINDS=set('buifc')
+_NUMERIC_KINDS = set('buifc')
+EMPTY_HYPERCUBE_INDICATOR = 'E'
+MIXED_HYPERCUBE_INDICATOR = 'M'
+
 
 def plot_dataset():
     x1 = []

@@ -16,19 +16,23 @@ if __name__ == "__main__":
     # Creating an empty grid
     threshold = 0.8
     # Creating an instance of ANNCAD classifier
-    anncad = AnncadClassifier(threshold, 2)
+    anncad = AnncadClassifier(threshold, 2, [[0.0, 100.0], [0.0, 100.0]])
     while True:
         try:
-            observation = next(generator)
-            anncad.add_example(observation)
+            observation = [next(generator)]
+            print(observation, type(observation))
+            anncad.add_examples(observation)
         except StopIteration:
             break
     print("Build grids")
-    anncad.build_grids()
-    example = Example([1, 1, 'R'])
+    anncad.set_hypercubes_classes()
+    example = [1, 1, 'R']
     print("Classify")
-    anncad.classify(example=example)
+    class_id = anncad.test(example=example)
+    print(class_id, example[-1])
+    example = [2, 2]
+    class_id = anncad.classify(example)
+    print(class_id)
     print("Update")
-    examples = [example, Example([5, 3, 'R']), Example([ 'B'])]
-    for example in examples:
-        anncad.update(example)
+    examples = [[5, 3, 'R'], [8, 3, 'B'], [1, 2, 'B']]
+    anncad.update(examples)

@@ -1,14 +1,11 @@
-import utils
+from utils import EMPTY_HYPERCUBE_INDICATOR, MIXED_HYPERCUBE_INDICATOR
 
 class Hypercube(object):
     def __init__(self, coords):
-        if (not utils.is_array_numeric(coords)) or len(coords) < 1:
-            raise ValueError("Coordinates should be a numerical array with at least one element.")
         self.coords = coords
         self.examples = []
-        self.hypercube_class = 'E'
+        self.hypercube_class = EMPTY_HYPERCUBE_INDICATOR
         self.class_dict = {}
-        # TODO MIDDLE
         self.middle = [0.0] * len(coords)
         self.parent_hypercubes_indices = []
 
@@ -17,12 +14,11 @@ class Hypercube(object):
         self.examples.append(example)
 
     def set_hypercube_class(self):
-        # Setting up the dictionary - class : 0 for starters
         self.class_dict = dict.fromkeys(list(set([x.class_id for x in self.examples])), 0)
         old_class = self.hypercube_class
         print(old_class)
         if not self.examples:
-            self.hypercube_class = 'E'
+            self.hypercube_class = EMPTY_HYPERCUBE_INDICATOR
         else:
             max_class = -1
             for class_id in self.class_dict.keys():

@@ -20,28 +20,28 @@ class Grid:
     def threshold(self, val):
         self._threshold = val
 
-    def __init__(self, bins_number, dims, level=None):
-        bins_number_log = float(np.log2(bins_number))
-        if bins_number_log.is_integer():
-            self.bins_number = bins_number
+    def __init__(self, hypercubes_number, dims, level=None):
+        hypercubes_number_log = float(np.log2(hypercubes_number))
+        if hypercubes_number_log.is_integer():
+            self.hypercubes_number = hypercubes_number
         else:
-            self.bins_number = 2**(math.ceil(bins_number_log))
+            self.hypercubes_number = 2 ** (math.ceil(hypercubes_number_log))
         self.dims = dims
-        self.bins_in_dim = int(np.power(self.bins_number, 1/self.dims))
-        print(self.bins_in_dim, self.dims)
+        self.hypercubes_in_dim = int(np.power(self.hypercubes_number, 1 / self.dims))
+        print(self.hypercubes_in_dim, self.dims)
         if level is None:
-            self.level = int(np.log2(self.bins_in_dim) + 1)
+            self.level = int(np.log2(self.hypercubes_in_dim) + 1)
         else:
             self.level = level
         print("New Grid! " + str(self.level))
 
-        shape = tuple([self.bins_in_dim] * self.dims)
+        shape = tuple([self.hypercubes_in_dim] * self.dims)
         self.hypercubes = np.ones(shape).astype(Hypercube)
 
-        self.create_grid()
+        self.create_grids_structure()
         self.child_grid = self.create_lower_level_grid()
 
-    def create_grid(self):
+    def create_grids_structure(self):
         for indices, hypercube in np.ndenumerate(self.hypercubes):
             self.hypercubes[indices] = Hypercube(indices)
 
@@ -49,12 +49,12 @@ class Grid:
         if self.level == 1:
             return False
         else:
-            return LowerLevelGrid(self.level - 1, self.bins_number, self.hypercubes, self.dims)
+            return LowerLevelGrid(self.level - 1, self.hypercubes_number, self.hypercubes, self.dims)
 
-    def nearest_neighbours_class(self, example, parents_indices):
+    def nearest_neighbours_class(self, example_coords, parents_indices):
         print("nearest neighbours class")
         parents_data = [(self.hypercubes[parent].middle, self.hypercubes[parent].hypercube_class) for parent in parents_indices]
-        distances = sorted([(distance.euclidean(example.coords, parent[0]), parent[1]) for parent in parents_data if not parent[1]=='E'])
+        distances = sorted([(distance.euclidean(example_coords, parent[0]), parent[1]) for parent in parents_data if not parent[1]=='E'])
         print(distances)
         return distances[0][1]
 
@@ -68,23 +68,22 @@ class Grid:
 
 
 class BasicGrid(Grid):
-    def __init__(self, min_attribute_range_list, max_attribute_range_list, bins_number, threshold):
-        self.min_attribute_range_list = min_attribute_range_list
-        self.max_attribute_range_list = max_attribute_range_list
+    def __init__(self, list_of_attributes_ranges, hypercubes_number, threshold):
+        self.min_attribute_range_list = [x[0] for x in list_of_attributes_ranges]
+        self.max_attribute_range_list = [x[1] for x in list_of_attributes_ranges]
         self.dims = len(self.min_attribute_range_list)
-        Grid.__init__(self, bins_number=bins_number, dims=self.dims)
+        Grid.__init__(self, hypercubes_number=hypercubes_number, dims=self.dims)
         Grid.threshold = threshold
         # TODO better name
-        self.hypercube_measurements = [(self.max_attribute_range_list[x] - self.min_attribute_range_list[x]) / self.bins_in_dim for x in range(len(self.min_attribute_range_list))]
+        self.hypercube_measurements = [(self.max_attribute_range_list[x] - self.min_attribute_range_list[x]) / self.hypercubes_in_dim for x in range(len(self.min_attribute_range_list))]
         self.set_hypercubes_classes()
         self.compute_middles_of_hypercubes()
 
-    def add_example_to_grid(self, observation):
-        example = Example(observation)
+    def add_example_to_grid(self, example):
         # TODO self-dimensions
         indices = tuple([int(example.coords[x] / self.hypercube_measurements[x]) for x in range(self.dims-1, -1, -1)])
         self.hypercubes[indices].add_example(example)
-        self.hypercubes[indices].set_hypercube_class()
+        # self.hypercubes[indices].set_hypercube_class()
 
     def set_hypercubes_classes(self):
         print("BASEGRID hypercubes")
@@ -101,18 +100,18 @@ class BasicGrid(Grid):
                 index = self.dims - (i + 1)
                 hc.middle[i] = (hc.coords[index] + 0.5) * self.hypercube_measurements[index]
 
-    def classify(self, example):
-        coords = tuple([int(example.coords[i] / self.hypercube_measurements[i]) for i in range(self.dims-1, -1, -1)])
+    def test(self, example_coords):
+        coords = tuple([int(example_coords[i] / self.hypercube_measurements[i]) for i in range(self.dims-1, -1, -1)])
         print("----------")
         if self.hypercubes[coords].hypercube_class is not 'E':
             return self.hypercubes[coords].hypercube_class
         else:
             print("empty cube")
             print(self.hypercubes[coords].middle)
-            returned_class = self.child_grid.classify(example, coords)
+            returned_class = self.child_grid.classify(example_coords, coords)
             print(returned_class)
             if returned_class[0] == -1:
-                returned_class = self.nearest_neighbours_class(example, returned_class[1])
+                returned_class = self.nearest_neighbours_class(example_coords, returned_class[1])
             return returned_class
 
     def update(self, example, coords=None):
@@ -141,7 +140,7 @@ class BasicGrid(Grid):
 class LowerLevelGrid(Grid):
     def __init__(self, level, parent_bins_number, parent_hypercubes, dims):
         bins_number = int((parent_bins_number/(2**dims)))
-        Grid.__init__(self, bins_number=bins_number,level=level, dims=dims)
+        Grid.__init__(self, hypercubes_number=bins_number, level=level, dims=dims)
         self.parent_hypercubes = parent_hypercubes
         self.set_hypercubes_parents_indices()
         self.compute_middles_of_hypercubes()
@@ -176,13 +175,13 @@ class LowerLevelGrid(Grid):
                     sums[index] += self.parent_hypercubes[coords].middle[index]
             hypercube.middle = [x/4 for x in sums]
 
-    def classify(self, example, coords):
+    def classify(self, example_coords, coords):
         coords = tuple([int(x/2) for x in coords])
         print(coords)
         if self.hypercubes[coords].hypercube_class == 'E':
-            returned_class = self.child_grid.classify(example, coords)
+            returned_class = self.child_grid.classify(example_coords, coords)
             if returned_class[0] == -1:
-                returned_class = self.nearest_neighbours_class(example, returned_class[1])
+                returned_class = self.nearest_neighbours_class(example_coords, returned_class[1])
             return returned_class
         elif self.hypercubes[coords].hypercube_class == 'M':
             return -1, self.hypercubes[coords].parent_hypercubes_indices # flag indicating that we need to compute distance
