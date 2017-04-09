@@ -16,7 +16,7 @@ if __name__ == "__main__":
     # Creating an empty grid
     threshold = 0.8
     # Creating an instance of ANNCAD classifier
-    anncad = AnncadClassifier(threshold, 2, [[0.0, 100.0], [0.0, 100.0]])
+    anncad = AnncadClassifier(threshold, '3', [(0.0, 100.0), (0.0, 100.0)])
     while True:
         try:
             observation = [next(generator)]

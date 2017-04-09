@@ -1,7 +1,12 @@
 class Example(object):
-
+    """
+    A representation of an observation.
+    
+    :param observation: A list of example's coordinates and its class on the last position.
+    :example: observation = [2, 3, 'B']
+    :raises ValueError: Raises an exception when len(observation) < 2
+    """
     def __init__(self, observation):
-        # TODO not sure about having both coords and the class in one struct
         if len(observation) < 2:
             raise ValueError \
                 ("Observation should have at least two items: corrdinates of the example and its class.")
