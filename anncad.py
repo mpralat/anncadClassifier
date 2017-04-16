@@ -6,7 +6,7 @@ class AnncadClassifier:
     """
     Class providing methods for user to create and use the classifier.
     
-    :param threshold:  When difference between cardinalities of two most frequent classes divided by sum of them is greater than threshold, we assign most frequent class.
+    :param threshold:  When difference between cardinalities of two most frequent classes divided by sum of them is greater than threshold, we assign the most frequent class.
     :param batch_size: Minimum number of Examples that triggers Update method.
     :param attributes_boundaries: A list of tuples, each consisting of min and max values of the attribute. 
     :param hypercubes_number: Number of hypercubes in the BasicGrid. Default value: 2^(number of Example's attributes).
@@ -36,7 +36,6 @@ class AnncadClassifier:
         
         :param list_of_examples: A list of Examples.
         """
-        # Add to basic grid first
         for example_as_a_list in list_of_examples:
             if self.check_if_proper_example_coordinates(example_as_a_list[:-1]):
                 self.basic_grid.add_example_to_grid(Example(example_as_a_list))

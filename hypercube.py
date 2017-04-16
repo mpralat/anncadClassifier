@@ -1,6 +1,7 @@
 from utils import EMPTY_HYPERCUBE_INDICATOR, MIXED_HYPERCUBE_INDICATOR
 
-class Hypercube():
+
+class Hypercube:
     """
     A structure containing Examples. Number of its dimensions depends on how many attributes each Example has.
     
@@ -29,7 +30,7 @@ class Hypercube():
         If the Hypercube contains no examples, then the EMPTY_CLASS_INDICATOR is assigned as the class id.
         Otherwise the most frequent class is assigned.
         If they draw, assignment is random.
-        
+
         """
         self.class_dict = dict.fromkeys(list(set([x.class_id for x in self.examples])), 0)
         old_class = self.hypercube_class
@@ -52,9 +53,9 @@ class Hypercube():
     def set_lower_level_hypercube_class(self, parent_hypercubes, threshold):
         '''
         Sets the class of the Hypercube in LowerLevelGrid.
-        
+
         :param parent_hypercubes: list of Hypercubes from finer level, which create current Hypercube.
-        :param threshold: algorithm's parameter - if the difference between the cardinalities of the two most frequent classes does not exceed the threshold value, then the MIXED_CLASS_INDICATOR is assigned. 
+        :param threshold: algorithm's parameter - if the difference between the cardinalities of the two most frequent classes does not exceed the threshold value, then the MIXED_CLASS_INDICATOR is assigned.
         '''
         parent_class_dicts = [parent.class_dict for parent in parent_hypercubes]
         # Now the hypercube will get the counters of all classes
@@ -80,7 +81,7 @@ class Hypercube():
     def update_basic(self, example_list):
         """
         Updates the Hypercube's class after new Examples arrive.
-        
+
         :param example_list: A list consisting of Examples of the same class within the same Hypercube.
         :return: Hypercube's current class.
         """
@@ -100,11 +101,11 @@ class Hypercube():
     def update_lower_level(self, example_class, example_count, threshold):
         """
         Updates the Hypercube's class after new Examples arrive. This method is applicable to Hypercubes of the coarser Grids.
-        
-        
+
+
         :param example_class: Class of provided examples.
         :param example_count: Number of Examples of given class within the Hypercubes of the finer Grid that build the current Hypercube.
-        :param threshold: algorithm's parameter - if the difference between the cardinalities of the two most frequent classes does not exceed the threshold value, then the MIXED_CLASS_INDICATOR is assigned. 
+        :param threshold: algorithm's parameter - if the difference between the cardinalities of the two most frequent classes does not exceed the threshold value, then the MIXED_CLASS_INDICATOR is assigned.
         :return: Hypercube's current class.
         """
         if self.hypercube_class == EMPTY_HYPERCUBE_INDICATOR:
