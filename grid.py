@@ -73,7 +73,7 @@ class Grid:
         :param example_coords: Coordinates of the observation.
         :param parents_indices: Indices of 2**dims Hypercubes, contained in current grids Hypercube.
 
-        :return class of the nearest, not empty Hypercube
+        :return: class of the nearest, not empty Hypercube
         """
         print("Computing the nearest neighbours class.")
         parents_data = [(self.hypercubes[parent].center, self.hypercubes[parent].hypercube_class) for parent in
