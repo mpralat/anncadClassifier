@@ -28,7 +28,7 @@ class AnncadClassifier:
                 self.hypercubes_number = int(hypercubes_number)
             except:
                 raise ValueError("Hypercubes_number has to be numeric")
-        self.basic_grid = BasicGrid(self.attributes_boundaries, hypercubes_number=self.hypercubes_number, threshold=self.threshold)
+        self.basic_grid = BasicGrid(list_of_attributes_ranges=self.attributes_boundaries, hypercubes_number=self.hypercubes_number, threshold=self.threshold)
 
     def add_examples(self, list_of_examples):
         """
@@ -37,8 +37,8 @@ class AnncadClassifier:
         :param list_of_examples: A list of Examples.
         """
         for example_as_a_list in list_of_examples:
-            if self.check_if_proper_example_coordinates(example_as_a_list[:-1]):
-                self.basic_grid.add_example_to_grid(Example(example_as_a_list))
+            if self.check_if_proper_example_coordinates(coordinates=example_as_a_list[:-1]):
+                self.basic_grid.add_example_to_grid(example=Example(example_as_a_list))
 
     def set_hypercubes_classes(self):
         """
@@ -53,11 +53,11 @@ class AnncadClassifier:
         :param example: A list of coordinates and a class id at the last index.
         :return: Class id.
         """
-        if not is_array_numeric(example[:-1]):
+        if not is_array_numeric(array=example[:-1]):
             print("Observation coordinates have to be numeric")
             return None
-        example = Example(example)
-        return self.classify(example.coords)
+        example = Example(observation=example)
+        return self.classify(example_coords=example.coords)
 
     def classify(self, example_coords):
         """
@@ -66,10 +66,10 @@ class AnncadClassifier:
         :param example_coords: Coordinates of the observation.
         :return: Class id.
         """
-        if not is_array_numeric(example_coords):
+        if not is_array_numeric(array=example_coords):
             print("Observation coordinates have to be numeric")
             return None
-        return self.basic_grid.test(example_coords)
+        return self.basic_grid.test(example_coords=example_coords)
 
     def update(self, list_of_examples):
         """
@@ -78,8 +78,8 @@ class AnncadClassifier:
         :param list_of_examples: A list of new Examples.
         """
         for example_as_a_list in list_of_examples:
-            if self.check_if_proper_example_coordinates(example_as_a_list[:-1]):
-                self.example_queue.append(Example(example_as_a_list))
+            if self.check_if_proper_example_coordinates(coordinates=example_as_a_list[:-1]):
+                self.example_queue.append(Example(observation=example_as_a_list))
         self.batch_update()
 
     def batch_update(self):
@@ -87,7 +87,7 @@ class AnncadClassifier:
         Checks if the number of Examples in the example_queue is sufficient and updates the grids.
         """
         if len(self.example_queue) > self.batch_size:
-            self.basic_grid.batch_update(self.example_queue)
+            self.basic_grid.batch_update(examples=self.example_queue)
 
     def check_if_proper_example_coordinates(self, coordinates):
         """

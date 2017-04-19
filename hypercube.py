@@ -13,7 +13,7 @@ class Hypercube:
         self.examples = []
         self.hypercube_class = EMPTY_HYPERCUBE_INDICATOR
         self.class_dict = {}
-        self.middle = [0.0] * len(coords)
+        self.center = [0.0] * len(coords)
         self.parent_hypercubes_indices = []
 
     def add_example(self, example):
@@ -34,7 +34,6 @@ class Hypercube:
         """
         self.class_dict = dict.fromkeys(list(set([x.class_id for x in self.examples])), 0)
         old_class = self.hypercube_class
-        print(old_class)
         if not self.examples:
             self.hypercube_class = EMPTY_HYPERCUBE_INDICATOR
         else:
