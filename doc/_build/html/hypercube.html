@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>hypercube module &#8212; ANNCAD 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="main module" href="main.html" />
+    <link rel="prev" title="grid module" href="grid.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-hypercube">
+<span id="hypercube-module"></span><h1>hypercube module<a class="headerlink" href="#module-hypercube" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="hypercube.Hypercube">
+<em class="property">class </em><code class="descclassname">hypercube.</code><code class="descname">Hypercube</code><span class="sig-paren">(</span><em>coords</em><span class="sig-paren">)</span><a class="headerlink" href="#hypercube.Hypercube" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>A structure containing Examples. Number of its dimensions depends on how many attributes each Example has.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>coords</strong> &#8211; Coordinates of this particular Hypercube in Grid.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="hypercube.Hypercube.add_example">
+<code class="descname">add_example</code><span class="sig-paren">(</span><em>example</em><span class="sig-paren">)</span><a class="headerlink" href="#hypercube.Hypercube.add_example" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds an Example to a Hypercube</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>example</strong> &#8211; Element object to be added.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hypercube.Hypercube.set_hypercube_class">
+<code class="descname">set_hypercube_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hypercube.Hypercube.set_hypercube_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the class of the Hypercube in the BasicGrid.
+If the Hypercube contains no examples, then the EMPTY_CLASS_INDICATOR is assigned as the class id.
+Otherwise the most frequent class is assigned.
+If they draw, assignment is random.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="hypercube.Hypercube.set_lower_level_hypercube_class">
+<code class="descname">set_lower_level_hypercube_class</code><span class="sig-paren">(</span><em>parent_hypercubes</em>, <em>threshold</em><span class="sig-paren">)</span><a class="headerlink" href="#hypercube.Hypercube.set_lower_level_hypercube_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the class of the Hypercube in LowerLevelGrid.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>parent_hypercubes</strong> &#8211; list of Hypercubes from finer level, which create current Hypercube.</li>
+<li><strong>threshold</strong> &#8211; algorithm&#8217;s parameter - if the difference between the cardinalities of the two most frequent classes does not exceed the threshold value, then the MIXED_CLASS_INDICATOR is assigned.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hypercube.Hypercube.update_basic">
+<code class="descname">update_basic</code><span class="sig-paren">(</span><em>example_list</em><span class="sig-paren">)</span><a class="headerlink" href="#hypercube.Hypercube.update_basic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the Hypercube&#8217;s class after new Examples arrive.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>example_list</strong> &#8211; A list consisting of Examples of the same class within the same Hypercube.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Hypercube&#8217;s current class.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="hypercube.Hypercube.update_lower_level">
+<code class="descname">update_lower_level</code><span class="sig-paren">(</span><em>example_class</em>, <em>example_count</em>, <em>threshold</em><span class="sig-paren">)</span><a class="headerlink" href="#hypercube.Hypercube.update_lower_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the Hypercube&#8217;s class after new Examples arrive. This method is applicable to Hypercubes of the coarser Grids.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>example_class</strong> &#8211; Class of provided examples.</li>
+<li><strong>example_count</strong> &#8211; Number of Examples of given class within the Hypercubes of the finer Grid that build the current Hypercube.</li>
+<li><strong>threshold</strong> &#8211; algorithm&#8217;s parameter - if the difference between the cardinalities of the two most frequent classes does not exceed the threshold value, then the MIXED_CLASS_INDICATOR is assigned.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Hypercube&#8217;s current class.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">dataGenerator</a><ul>
+      <li>Previous: <a href="grid.html" title="previous chapter">grid module</a></li>
+      <li>Next: <a href="main.html" title="next chapter">main module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/hypercube.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Sebastian Firlik, Marta Prałat.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/hypercube.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

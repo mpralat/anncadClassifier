@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>anncad module &#8212; ANNCAD 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="example module" href="example.html" />
+    <link rel="prev" title="dataGenerator" href="modules.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-anncad">
+<span id="anncad-module"></span><h1>anncad module<a class="headerlink" href="#module-anncad" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="anncad.AnncadClassifier">
+<em class="property">class </em><code class="descclassname">anncad.</code><code class="descname">AnncadClassifier</code><span class="sig-paren">(</span><em>threshold</em>, <em>batch_size</em>, <em>attributes_boundaries</em>, <em>hypercubes_number=None</em><span class="sig-paren">)</span><a class="headerlink" href="#anncad.AnncadClassifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Class providing methods for user to create and use the classifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>threshold</strong> &#8211; When difference between cardinalities of two most frequent classes divided by sum of them is greater than threshold, we assign the most frequent class.</li>
+<li><strong>batch_size</strong> &#8211; Minimum number of Examples that triggers Update method.</li>
+<li><strong>attributes_boundaries</strong> &#8211; A list of tuples, each consisting of min and max values of the attribute.</li>
+<li><strong>hypercubes_number</strong> (<em>integer</em><em> or </em><a class="reference external" href="https://docs.python.org/2/library/constants.html#None" title="(in Python v2.7)"><em>None</em></a>) &#8211; Number of hypercubes in the BasicGrid. Default value: 2^(number of Example&#8217;s attributes).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>ValueError</strong> &#8211; When threshold, batch_size or hypercubes_number are not convertible to numeric types.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="anncad.AnncadClassifier.add_examples">
+<code class="descname">add_examples</code><span class="sig-paren">(</span><em>list_of_examples</em><span class="sig-paren">)</span><a class="headerlink" href="#anncad.AnncadClassifier.add_examples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds all of the provided Examples to BasicGrid.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>list_of_examples</strong> &#8211; A list of Examples.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="anncad.AnncadClassifier.batch_update">
+<code class="descname">batch_update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#anncad.AnncadClassifier.batch_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the number of Examples in the example_queue is sufficient and updates the grids.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="anncad.AnncadClassifier.check_if_proper_example_coordinates">
+<code class="descname">check_if_proper_example_coordinates</code><span class="sig-paren">(</span><em>coordinates</em><span class="sig-paren">)</span><a class="headerlink" href="#anncad.AnncadClassifier.check_if_proper_example_coordinates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the list of coordinates contains only numeric values, has adequate length and if all of the provided values are within the attributes boundaries.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>coordinates</strong> &#8211; A list of coordinates.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if the list meets all of the conditions, otherwise False.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="anncad.AnncadClassifier.classify">
+<code class="descname">classify</code><span class="sig-paren">(</span><em>example_coords</em><span class="sig-paren">)</span><a class="headerlink" href="#anncad.AnncadClassifier.classify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a list of coordinates, classifies the observation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>example_coords</strong> &#8211; Coordinates of the observation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Class id.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="anncad.AnncadClassifier.set_hypercubes_classes">
+<code class="descname">set_hypercubes_classes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#anncad.AnncadClassifier.set_hypercubes_classes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets all of the BasicGrid&#8217;s Hypercubes classes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="anncad.AnncadClassifier.test">
+<code class="descname">test</code><span class="sig-paren">(</span><em>example</em><span class="sig-paren">)</span><a class="headerlink" href="#anncad.AnncadClassifier.test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a list of coordinates and a class id at the last index, creates an Example object and classifies it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>example</strong> &#8211; A list of coordinates and a class id at the last index.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Class id.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="anncad.AnncadClassifier.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>list_of_examples</em><span class="sig-paren">)</span><a class="headerlink" href="#anncad.AnncadClassifier.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the Examples to the example_queue.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>list_of_examples</strong> &#8211; A list of new Examples.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">dataGenerator</a><ul>
+      <li>Previous: <a href="modules.html" title="previous chapter">dataGenerator</a></li>
+      <li>Next: <a href="example.html" title="next chapter">example module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/anncad.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Sebastian Firlik, Marta Prałat.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/anncad.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
